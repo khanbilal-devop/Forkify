@@ -1,5 +1,5 @@
 import icons from 'url:../img/icons.svg';
-import { showSpinner, hideSpinner ,showError} from './util';
+import { showSpinner, hideSpinner, showError } from './util';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
@@ -17,6 +17,7 @@ const fetchRecipie = async (id) => {
     showSpinner(recipeContainer);
     const response =
       await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+      // 5ed6604591c37cdc054bc880
     const data = await response.json();
     if (!response.ok) throw new Error(`Status : ${response?.status} \n${data?.message}`)
     recipe = data?.data?.recipe;
@@ -33,13 +34,13 @@ const fetchRecipie = async (id) => {
   } catch (err) {
     hideSpinner(recipeContainer);
     recipe = {};
-    showError('No recipes found for your query. Please try again!',recipeContainer)
+    showError('No recipes found for your query. Please try again!', recipeContainer)
   }
   return recipe;
 }
 
 
-const renderRecipie = async (id= '5ed6604591c37cdc054bc886') => {
+const renderRecipie = async (id = '5ed6604591c37cdc054bc886') => {
   const recipe = await fetchRecipie(id);
   if (Object.keys(recipe).length) {
     const { image, title, cookingTime, servings, ingredients } = recipe
@@ -147,9 +148,11 @@ const renderRecipie = async (id= '5ed6604591c37cdc054bc886') => {
 }
 
 const init = () => {
-  window.addEventListener('hashchange',(e) => {
-  let id = (e.target.location.hash).substring('1');
-  renderRecipie(id);
-});}
-
+  ['load', 'hashchange'].forEach(event => {
+    window.addEventListener(event, (e) => {
+      let id = (e.target.location.hash).substring('1');
+      renderRecipie(id);
+    })
+  });
+}
 init();
