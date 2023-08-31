@@ -21,7 +21,7 @@ class RecipeView {
     }
 
 
-    render() {
+    render(recipe) {
         this._data = recipe;
         const html = this._generateMarkup();
         this._parentElement.innerHTML = '';
