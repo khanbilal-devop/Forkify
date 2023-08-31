@@ -1,17 +1,15 @@
-import { API_URL,TIME_OUT_SECONDS } from "./constant";
-import { timeout } from "./helper";
+import { API_URL } from "./constant";
+import { getJson } from "./helper";
 
 export const state = {
-    recipe: {}
+    recipe: {},
+    search: []
 }
 
 
 export const fetchRecipe = async (id) => {
-    const response = await Promise.race([fetch(`${API_URL}${id}`),timeout(TIME_OUT_SECONDS)]);
-    // 5ed6604591c37cdc054bc880
-    const data = await response.json();
-    if (!response.ok) throw new Error(`Status : ${response?.status} \n${data?.message}`)
-    recipe = data?.data?.recipe;
+    const data = await getJson(`${API_URL}${id}`)
+    let { recipe } = data?.data;
     recipe = {
         id: recipe?.id,
         title: recipe?.title,
@@ -25,3 +23,18 @@ export const fetchRecipe = async (id) => {
     state.recipe = recipe;
 }
 
+
+export const searchRecipe = async (query = "pizza") => {
+    const data = await getJson(`${API_URL}?search=${query}&key=acf9a8df-9ca2-4d85-8754-bc5e62d6e052`)
+    let { recipes } = data?.data;
+    recipes = (recipes || []).map(each => {
+        return {
+            id: each?.id,
+            imageUrl: each?.image_url,
+            publisher: each?.publisher,
+            title: each?.title
+
+        }
+    })
+    state['search'] = recipes;
+}
