@@ -37,11 +37,6 @@ const fetchRecipie = async (id) => {
 
 
 const init = () => {
-  ['load', 'hashchange'].forEach(event => {
-    window.addEventListener(event, (e) => {
-      let id = (e.target.location.hash).substring('1');
-      fetchRecipie(id);
-    })
-  });
+  RecipeView.addViewHandler(fetchRecipie);
 }
 init();

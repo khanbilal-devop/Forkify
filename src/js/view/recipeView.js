@@ -134,6 +134,15 @@ class RecipeView {
         return markup;
     }
 
+    addViewHandler = (recipedRenderCallback) =>{
+      ['load', 'hashchange'].forEach(event => {
+        window.addEventListener(event, (e) => {
+          let id = (e.target.location.hash).substring('1');
+          recipedRenderCallback(id);
+        })
+      });
+    }
+
 }
 
 export default new RecipeView();
