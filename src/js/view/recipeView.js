@@ -1,24 +1,12 @@
 import icons from 'url:../../img/icons.svg';
+import View from './view.js';
 
-class RecipeView {
+class RecipeView extends View {
 
      _parentElement = document.querySelector('.recipe');
-    _data;
-    #errorMessage = 'No recipes found for your query. Please try again!';
-    #succesMessage = 'Success';
+    _errorMessage = 'No recipes found for your query. Please try again!';
+    _succesMessage = 'Success';
 
-
-
-    renderSpinner = () => {
-        const spinner = `
-        <div class="spinner">
-            <svg>
-                <use href="${icons}#icon-loader"></use>
-            </svg>
-        </div> `;
-       this._parentElement.textContent = '';
-        this._parentElement.insertAdjacentHTML("afterbegin", spinner);
-    }
 
 
     render(recipe) {
@@ -28,40 +16,7 @@ class RecipeView {
         this._parentElement.insertAdjacentHTML("afterbegin", html);
     }
 
-    hideSpinner = () =>  this._parentElement.textContent = '';
 
-
-    showError = (errorMessage = this.#errorMessage) => {
-        const markup = ` <div class="error">
-        <div>
-          <svg>
-            <use href="${icons}#icon-alert-triangle"></use>
-          </svg>
-        </div>
-        <p>${errorMessage}</p>
-      </div>`
-      this._parentElement.textContent = '';
-      this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    
-    }
-
-    showSuccess(succesMessage = this.#succesMessage){
-      const markup = `
-      <div class="message">
-      <div>
-        <svg>
-          <use href="${icons}#icon-smile"></use>
-        </svg>
-      </div>
-      <p>
-       ${succesMessage}
-      </p>
-    </div>`
-    this._parentElement.textContent = '';
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
-
-    }
-    
 
     _generateMarkup() {
         const { image, title, cookingTime, servings, ingredients } = this._data
@@ -154,10 +109,10 @@ class RecipeView {
         return markup;
     }
 
-    addViewHandler = (recipedRenderCallback) =>{
+    addViewHandler = (recipedRenderCallback) => {
       ['load', 'hashchange'].forEach(event => {
         window.addEventListener(event, (e) => {
-          let id = (e.target.location.hash).substring('1');
+          const id = (e.target.location.hash).substring('1');
           recipedRenderCallback(id);
         })
       });
