@@ -31,7 +31,7 @@ const fetchRecipie = async (id) => {
       RecipeView.hideSpinner();
     }
     //Showing error 
-    RecipeView.showError('No recipes found for your query. Please try again!')
+    RecipeView.showError()
   }
 }
 
