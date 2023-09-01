@@ -3,8 +3,11 @@ import 'regenerator-runtime/runtime';
 import * as model from './model';
 import RecipeView from './view/recipeView';
 import SearchView from './view/searchView';
+import ResultsView from './view/resultsView';
 
-
+if(module.hot){
+  module.hot.accept()
+}
 
 const {state} = model; 
 
@@ -28,10 +31,7 @@ const controlRecipe = async (id) => {
     }
   } catch (err) {
     //Hiding spinner
-    const isSpinnerPresent = recipeContainer.querySelectorAll(":is(div).spinner").length;
-    if(isSpinnerPresent){
-      RecipeView.clearInput();
-    }
+      RecipeView.hideSpinner();
     //Showing error 
     RecipeView.showError()
   }
@@ -43,14 +43,19 @@ const controlSearchRecipe = async () => {
      const query = SearchView.getSearchQuery();
      if(!query) return;
 
+     //Rednering Spinner
+     ResultsView.renderSpinner();
+
     // fetching recpie list for a query
     await model.searchRecipe(query);
     const recipes = state?.search;
 
     //Rendering
-    console.log(recipes);
+    ResultsView.render(recipes)
   }catch(err){
-    console.error(err);
+    ResultsView.hideSpinner();
+    
+    ResultsView.showError(err?.message);
   }
 }
 

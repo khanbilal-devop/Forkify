@@ -12,7 +12,7 @@ class RecipeView extends View {
     render(recipe) {
         this._data = recipe;
         const html = this._generateMarkup();
-        clearingAndInserting(html);
+        this.clearingAndInserting(html);
     }
 
 
@@ -108,11 +108,11 @@ class RecipeView extends View {
         return markup;
     }
 
-    addViewHandler = (recipedRenderCallback) => {
+    addViewHandler = (recipeRenderCallback) => {
       ['load', 'hashchange'].forEach(event => {
         window.addEventListener(event, (e) => {
           const id = (e.target.location.hash).substring('1');
-          recipedRenderCallback(id);
+          recipeRenderCallback(id);
         })
       });
     }

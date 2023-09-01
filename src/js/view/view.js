@@ -1,29 +1,36 @@
 import icons from 'url:../../img/icons.svg';
 
 export default class View {
-    _data;
+  _data;
 
 
-    clearingAndInserting(html){
-      clearInput();
-      this._parentElement.insertAdjacentHTML("afterbegin", html);
-    }
+  clearingAndInserting(html) {
+    this.clearInput();
+    this._parentElement.insertAdjacentHTML("afterbegin", html);
+  }
 
-    clearInput(){
+  clearInput(){
+    this._parentElement.textContent = '';
+  }
+
+  hideSpinner() {
+    const isSpinnerPresent = this._parentElement.querySelectorAll(":is(div).spinner").length;
+    if (isSpinnerPresent) {
       this._parentElement.textContent = '';
     }
-    renderSpinner = () => {
-        const spinner = `
+  }
+  renderSpinner = () => {
+    const spinner = `
         <div class="spinner">
             <svg>
                 <use href="${icons}#icon-loader"></use>
             </svg>
         </div> `;
-       this.clearingAndInserting(spinner);
-    }
+    this.clearingAndInserting(spinner);
+  }
 
-    showError = (errorMessage = this._errorMessage) => {
-        const markup = ` <div class="error">
+  showError = (errorMessage = this._errorMessage) => {
+    const markup = ` <div class="error">
         <div>
           <svg>
             <use href="${icons}#icon-alert-triangle"></use>
@@ -31,11 +38,11 @@ export default class View {
         </div>
         <p>${errorMessage}</p>
       </div>`
-        this.clearingAndInserting(markup);
-    }
+    this.clearingAndInserting(markup);
+  }
 
-    showSuccess(succesMessage = this._succesMessage) {
-        const markup = `
+  showSuccess(succesMessage = this._succesMessage) {
+    const markup = `
         <div class="message">
         <div>
           <svg>
@@ -46,8 +53,8 @@ export default class View {
          ${succesMessage}
         </p>
       </div>`
-      clearingAndInserting(markup);
-    }
+    this.clearingAndInserting(markup);
+  }
 
 
 

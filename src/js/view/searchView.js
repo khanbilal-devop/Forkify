@@ -2,21 +2,21 @@ import View from "./view";
 
 class SearchView extends View {
 
-    #parentElement = document.querySelector('.search');
+    _parentElement = document.querySelector('.search');
 
 
     getSearchQuery(){
-        const query = this.#parentElement.querySelector('.search__field').value;
-        this.#clearInput();
+        const query = this._parentElement.querySelector('.search__field').value;
+        this._clearInput();
         return query;
     }
 
-    #clearInput(){
-        this.#parentElement.querySelector('.search__field').value = '';
+    _clearInput(){
+        this._parentElement.querySelector('.search__field').value = '';
     }
 
     addViewHandler(searchBtnCallback){
-      const searchBtn = this.#parentElement.querySelector('.search__btn');
+      const searchBtn = this._parentElement.querySelector('.search__btn');
        searchBtn.addEventListener('click',searchBtnCallback)
     }
 }
