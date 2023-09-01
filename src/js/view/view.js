@@ -3,6 +3,15 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
     _data;
 
+
+    clearingAndInserting(html){
+      clearInput();
+      this._parentElement.insertAdjacentHTML("afterbegin", html);
+    }
+
+    clearInput(){
+      this._parentElement.textContent = '';
+    }
     renderSpinner = () => {
         const spinner = `
         <div class="spinner">
@@ -10,11 +19,8 @@ export default class View {
                 <use href="${icons}#icon-loader"></use>
             </svg>
         </div> `;
-        this._parentElement.textContent = '';
-        this._parentElement.insertAdjacentHTML("afterbegin", spinner);
+       this.clearingAndInserting(spinner);
     }
-
-    hideSpinner = () => this._parentElement.textContent = '';
 
     showError = (errorMessage = this._errorMessage) => {
         const markup = ` <div class="error">
@@ -25,8 +31,7 @@ export default class View {
         </div>
         <p>${errorMessage}</p>
       </div>`
-        this._parentElement.textContent = '';
-        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+        this.clearingAndInserting(markup);
     }
 
     showSuccess(succesMessage = this._succesMessage) {
@@ -41,9 +46,11 @@ export default class View {
          ${succesMessage}
         </p>
       </div>`
-        this._parentElement.textContent = '';
-        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+      clearingAndInserting(markup);
     }
+
+
+
 
 }
 

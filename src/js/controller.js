@@ -30,7 +30,7 @@ const controlRecipe = async (id) => {
     //Hiding spinner
     const isSpinnerPresent = recipeContainer.querySelectorAll(":is(div).spinner").length;
     if(isSpinnerPresent){
-      RecipeView.hideSpinner();
+      RecipeView.clearInput();
     }
     //Showing error 
     RecipeView.showError()
