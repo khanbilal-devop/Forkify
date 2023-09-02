@@ -26,6 +26,8 @@ const controlRecipe = async (id) => {
     await model.fetchRecipe(id);
     const { recipe } = state
 
+    ResultsView.update(state?.search?.paginatedRecipes)
+
     // Rendering recepie
     if (Object.keys(recipe).length) {
       RecipeView.render(recipe);
