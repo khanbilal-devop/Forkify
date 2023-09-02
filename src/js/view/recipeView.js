@@ -3,23 +3,23 @@ import View from './view.js';
 
 class RecipeView extends View {
 
-     _parentElement = document.querySelector('.recipe');
-    _errorMessage = 'No recipes found for your query. Please try again!';
-    _succesMessage = 'Success';
+  _parentElement = document.querySelector('.recipe');
+  _errorMessage = 'No recipes found for your query. Please try again!';
+  _succesMessage = 'Success';
 
 
 
-    render(recipe) {
-        this._data = recipe;
-        const html = this._generateMarkup();
-        this.clearingAndInserting(html);
-    }
+  render(recipe) {
+    this._data = recipe;
+    const html = this._generateMarkup();
+    this.clearingAndInserting(html);
+  }
 
 
 
-    _generateMarkup() {
-        const { image, title, cookingTime, servings, ingredients } = this._data
-        const markup = `
+  _generateMarkup() {
+    const { image, title, cookingTime, servings, ingredients } = this._data
+    const markup = `
        <figure class="recipe__fig">
        <img src="${image}" alt="${title}" class="recipe__img" />
        <h1 class="recipe__title">
@@ -43,12 +43,12 @@ class RecipeView extends View {
          <span class="recipe__info-text">servings</span>
     
          <div class="recipe__info-buttons">
-           <button class="btn--tiny btn--increase-servings">
+           <button data="${servings - 1}" class="btn--tiny btn--increase-servings">
              <svg>
                <use href="${icons}#icon-minus-circle"></use>
              </svg>
            </button>
-           <button class="btn--tiny btn--increase-servings">
+           <button data="${servings + 1}"  class="btn--tiny btn--increase-servings">
              <svg>
                <use href="${icons}#icon-plus-circle"></use>
              </svg>
@@ -72,7 +72,7 @@ class RecipeView extends View {
        <h2 class="heading--2">Recipe ingredients</h2>
        <ul class="recipe__ingredient-list">
           ${(ingredients || []).map(each =>
-            `<li class="recipe__ingredient">
+      `<li class="recipe__ingredient">
             <svg class="recipe__icon">
               <use href="${icons}#icon-check"></use>
             </svg>
@@ -82,7 +82,7 @@ class RecipeView extends View {
               ${each?.description}
             </div>
           </li>`
-        ).join("")}
+    ).join("")}
       
        </ul>
      </div>
@@ -105,17 +105,28 @@ class RecipeView extends View {
          </svg>
        </a>
      </div> `;
-        return markup;
-    }
+    return markup;
+  }
 
-    addViewHandler = (recipeRenderCallback) => {
-      ['load', 'hashchange'].forEach(event => {
-        window.addEventListener(event, (e) => {
-          const id = (e.target.location.hash).substring('1');
-          recipeRenderCallback(id);
-        })
-      });
-    }
+  addViewHandler = (recipeRenderCallback, servingBtnCallBack) => {
+    ['load', 'hashchange'].forEach(event => {
+      window.addEventListener(event, (e) => {
+        const id = (e.target.location.hash).substring('1');
+        recipeRenderCallback(id);
+      })
+    });
+
+    this._parentElement.addEventListener('click', (e) => {
+      //Selecting serving btn and validating the same
+      const servingBtn = e.target.closest('.btn--increase-servings');
+      if (!servingBtn) return;
+
+      // Fetching serving from dom and validating
+      const newServings = servingBtn.getAttribute('data');
+      if (+newServings > 0)
+        servingBtnCallBack(+newServings);
+    });
+  }
 
 }
 

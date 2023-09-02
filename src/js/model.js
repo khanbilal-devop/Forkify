@@ -69,3 +69,15 @@ export const updateStateForSearch = (currentPage = 1) => {
     state['search'] = search;
 }
 
+export const updateServings = (updatedServings) => {
+    const { recipe } = state;
+
+    // Caluculating ingredient quantity accordinng to servings
+    //    new qty = old qty * new serving / old serving
+    (recipe?.ingredients || []).forEach(each =>
+        each.quantity = each?.quantity * (updatedServings / recipe?.servings)
+    );
+
+    recipe.servings = updatedServings;
+}
+

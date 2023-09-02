@@ -74,9 +74,16 @@ const controlPagination = upComingPage => {
   PaginationView.render(state?.search);
 }
 
+const controlServing = (servings) => {
+  // updating servings
+  model.updateServings(servings)
+
+  //Render recipe
+  RecipeView.render(state?.recipe);
+}
 
 const init = () => {
-  RecipeView.addViewHandler(controlRecipe);
+  RecipeView.addViewHandler(controlRecipe,controlServing);
   SearchView.addViewHandler(controlSearchRecipe);
   PaginationView.addViewHandler(controlPagination)
 }
