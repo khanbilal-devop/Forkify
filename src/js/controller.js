@@ -4,12 +4,13 @@ import * as model from './model';
 import RecipeView from './view/recipeView';
 import SearchView from './view/searchView';
 import ResultsView from './view/resultsView';
+import PaginationView from './view/paginationView';
 
-if(module.hot){
-  module.hot.accept()
-}
+// if(module.hot){
+//   module.hot.accept()
+// }
 
-const {state} = model; 
+const { state } = model;
 
 //https://forkify-api.herokuapp.com/v2
 
@@ -23,7 +24,7 @@ const controlRecipe = async (id) => {
 
     //fetching Recipie
     await model.fetchRecipe(id);
-    const {recipe} = state
+    const { recipe } = state
 
     // Rendering recepie
     if (Object.keys(recipe).length) {
@@ -31,37 +32,52 @@ const controlRecipe = async (id) => {
     }
   } catch (err) {
     //Hiding spinner
-      RecipeView.hideSpinner();
+    RecipeView.hideSpinner();
     //Showing error 
     RecipeView.showError()
   }
 }
 
 const controlSearchRecipe = async () => {
-  try{
-     // Validating query
-     const query = SearchView.getSearchQuery();
-     if(!query) return;
+  try {
+    // Validating query
+    const query = SearchView.getSearchQuery();
+    if (!query) return;
 
-     //Rednering Spinner
-     ResultsView.renderSpinner();
+    //Rednering Spinner
+    ResultsView.renderSpinner();
 
     // fetching recpie list for a query
     await model.searchRecipe(query);
-    const recipes = state?.search;
+    const { search } = state;
 
-    //Rendering
-    ResultsView.render(recipes)
-  }catch(err){
+    //Rendering recipe results
+    ResultsView.render(search?.paginatedRecipes);
+
+    //Rendering pagination
+    PaginationView.render(search);
+  } catch (err) {
     ResultsView.hideSpinner();
-    
     ResultsView.showError(err?.message);
   }
+}
+
+
+const controlPagination = upComingPage => {
+  // Update search State
+  model.updateStateForSearch(upComingPage);
+
+  //Rendering recipe results
+  ResultsView.render(state?.search?.paginatedRecipes);
+
+  //Rendering pagination
+  PaginationView.render(state?.search);
 }
 
 
 const init = () => {
   RecipeView.addViewHandler(controlRecipe);
   SearchView.addViewHandler(controlSearchRecipe);
+  PaginationView.addViewHandler(controlPagination)
 }
 init();

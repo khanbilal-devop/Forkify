@@ -1,9 +1,15 @@
-import { API_URL } from "./constant";
+import { API_URL, PAGINATION_LIMIT } from "./constant";
 import { getJson } from "./helper";
 
 export const state = {
     recipe: {},
-    search: []
+    search: {
+        recipes: [],
+        paginatedRecipes: [],
+        currentPage: 1,
+        totalPage: 1,
+        paginationLimit: PAGINATION_LIMIT
+    }
 }
 
 
@@ -25,16 +31,41 @@ export const fetchRecipe = async (id) => {
 
 
 export const searchRecipe = async (query = "pizza") => {
+    let { search } = state;
     const data = await getJson(`${API_URL}?search=${query}&key=acf9a8df-9ca2-4d85-8754-bc5e62d6e052`)
     let { recipes } = data?.data;
-    recipes = (recipes || []).map(each => {
-        return {
+
+    // Splicing data for pagination
+    const totalPage = Math.ceil(recipes.length / PAGINATION_LIMIT);
+    search = {
+        ...search,
+        recipes,
+        totalPage
+    }
+    state['search'] = search;
+    updateStateForSearch();
+}
+
+
+export const updateStateForSearch = (currentPage = 1) => {
+    let { search } = state;
+    const start = (currentPage - 1) * PAGINATION_LIMIT;
+    const end = currentPage * PAGINATION_LIMIT;
+    let paginatedRecipes = (search?.recipes || []).slice(start, end);
+    paginatedRecipes = (paginatedRecipes || []).map(each => (
+        {
             id: each?.id,
             imageUrl: each?.image_url,
             publisher: each?.publisher,
             title: each?.title
 
         }
-    })
-    state['search'] = recipes;
+    ));
+    search = {
+        ...search,
+        currentPage,
+        paginatedRecipes
+    }
+    state['search'] = search;
 }
+
