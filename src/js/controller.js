@@ -5,6 +5,7 @@ import RecipeView from './view/recipeView';
 import SearchView from './view/searchView';
 import ResultsView from './view/resultsView';
 import PaginationView from './view/paginationView';
+import BookMarkView from './view/bookMarkView';
 
 // if(module.hot){
 //   module.hot.accept()
@@ -32,6 +33,9 @@ const controlRecipe = async (id) => {
     if (Object.keys(recipe).length) {
       RecipeView.render(recipe);
     }
+
+    //Book Mark View
+    BookMarkView.update(state.bookMarks);
   } catch (err) {
     //Hiding spinner
     RecipeView.hideSpinner();
@@ -85,21 +89,24 @@ const controlServing = (servings) => {
 }
 
 
-const controlAddAndRemoveBookMark = (id) =>  {
-   const {recipe} = state
+const controlAddAndRemoveBookMark = (id) => {
+  const { recipe } = state
 
-   //Checking wheter to add or remove from bookmarks
-   if(recipe.bookMarked)
-    model.removeBookMark(id);
-   else
-   model.addBookMark(id);
+  //Checking wheter to add or remove from bookmarks
+  if (recipe.bookMarked)
+    model.addAndRemoveBookMark(id);
+  else
+    model.addAndRemoveBookMark(id);
 
   // Update the view based on bookMark flag
   RecipeView.update(state.recipe);
+
+  //Render BookMarks List
+  BookMarkView.render(state.bookMarks);
 }
 
 const init = () => {
-  RecipeView.addViewHandler(controlRecipe,controlServing,controlAddAndRemoveBookMark);
+  RecipeView.addViewHandler(controlRecipe, controlServing, controlAddAndRemoveBookMark);
   SearchView.addViewHandler(controlSearchRecipe);
   PaginationView.addViewHandler(controlPagination)
 }

@@ -90,10 +90,10 @@ export const addAndRemoveBookMark = (id) => {
     const { bookMarks, recipe } = state;
     recipe.bookMarked = !recipe.bookMarked;
     if (recipe.bookMarked) {
-        bookMarks.push(id);
+        bookMarks.push(recipe);
         state['bookMarks'] = bookMarks;
     } else {
-        newBookMarks = bookMarks.filter(each => each !== id);
+        newBookMarks = bookMarks.filter(each => each?.id !== id);
         state['bookMarks'] = newBookMarks;
     }
     state['recipe'] = recipe;
