@@ -35,7 +35,12 @@ const controlRecipe = async (id) => {
     }
 
     //Book Mark View
-    BookMarkView.update(state.bookMarks);
+    state.isReloaded ?
+      BookMarkView.render(state.bookMarks)
+      : BookMarkView.update(state.bookMarks);
+
+    model.changeRelaoded();
+
   } catch (err) {
     //Hiding spinner
     RecipeView.hideSpinner();

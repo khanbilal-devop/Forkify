@@ -2,6 +2,7 @@ import { API_URL, PAGINATION_LIMIT } from "./constant";
 import { getJson } from "./helper";
 
 export const state = {
+    isReloaded : true,
     recipe: {},
     search: {
         recipes: [],
@@ -96,5 +97,20 @@ export const addAndRemoveBookMark = (id) => {
         newBookMarks = bookMarks.filter(each => each?.id !== id);
         state['bookMarks'] = newBookMarks;
     }
+    localStorage.setItem('bookMarks',JSON.stringify(bookMarks));
     state['recipe'] = recipe;
+
 }
+
+export const changeRelaoded = () => state.isReloaded = !state.isReloaded;
+
+// getting bookmarks from local Storage
+const getBookMark = () => {
+   const bookMarks = localStorage.getItem('bookMarks');
+   if(!bookMarks) return;
+   state.bookMarks = JSON.parse(bookMarks);;
+}
+
+const init = () => getBookMark()
+
+init();
