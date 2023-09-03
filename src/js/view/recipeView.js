@@ -112,7 +112,7 @@ class RecipeView extends View {
     ['load', 'hashchange'].forEach(event => {
       window.addEventListener(event, (e) => {
         const id = (e.target.location.hash).substring('1');
-        recipeRenderCallback(id);
+        id && recipeRenderCallback(id);
       })
     });
 

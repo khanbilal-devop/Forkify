@@ -6,6 +6,7 @@ import SearchView from './view/searchView';
 import ResultsView from './view/resultsView';
 import PaginationView from './view/paginationView';
 import BookMarkView from './view/bookMarkView';
+import AddRecipeView from './view/addRecipeView';
 
 // if(module.hot){
 //   module.hot.accept()
@@ -110,9 +111,14 @@ const controlAddAndRemoveBookMark = (id) => {
   BookMarkView.render(state.bookMarks);
 }
 
+const controlAddRecipe= (recipe) => {
+   console.log(recipe);
+}
+
 const init = () => {
   RecipeView.addViewHandler(controlRecipe, controlServing, controlAddAndRemoveBookMark);
   SearchView.addViewHandler(controlSearchRecipe);
-  PaginationView.addViewHandler(controlPagination)
+  PaginationView.addViewHandler(controlPagination);
+  AddRecipeView.addHandler(controlAddRecipe)
 }
 init();
