@@ -18,7 +18,7 @@ class RecipeView extends View {
 
 
   _generateMarkup() {
-    const { image, title, cookingTime, servings, ingredients } = this._data
+    const { image, title, cookingTime, servings, ingredients, bookMarked ,id} = this._data
     const markup = `
        <figure class="recipe__fig">
        <img src="${image}" alt="${title}" class="recipe__img" />
@@ -61,9 +61,9 @@ class RecipeView extends View {
            <use href="${icons}#icon-user"></use>
          </svg>
        </div>
-       <button class="btn--round">
+       <button data=${id} class="btn--round btn--bookmark">
          <svg class="">
-           <use href="${icons}#icon-bookmark-fill"></use>
+           <use href="${icons}#icon-bookmark${bookMarked ? '-fill' : ''}"></use>
          </svg>
        </button>
      </div>
@@ -108,7 +108,7 @@ class RecipeView extends View {
     return markup;
   }
 
-  addViewHandler = (recipeRenderCallback, servingBtnCallBack) => {
+  addViewHandler = (recipeRenderCallback, servingBtnCallBack,bookMarkHandler) => {
     ['load', 'hashchange'].forEach(event => {
       window.addEventListener(event, (e) => {
         const id = (e.target.location.hash).substring('1');
@@ -119,12 +119,20 @@ class RecipeView extends View {
     this._parentElement.addEventListener('click', (e) => {
       //Selecting serving btn and validating the same
       const servingBtn = e.target.closest('.btn--increase-servings');
-      if (!servingBtn) return;
-
-      // Fetching serving from dom and validating
-      const newServings = servingBtn.getAttribute('data');
-      if (+newServings > 0)
-        servingBtnCallBack(+newServings);
+      const bookMarkBtn = e.target.closest('.btn--bookmark');
+      if (servingBtn){      
+        // Fetching serving from dom and validating
+        const newServings = servingBtn.getAttribute('data');
+        if (+newServings > 0){
+          servingBtnCallBack(+newServings);
+        }
+      }else if(bookMarkBtn){
+        // Fetching recipe id from dom
+       const id =  bookMarkBtn.getAttribute('data');
+       bookMarkHandler(id);
+      }else {
+        return;
+      }
     });
   }
 

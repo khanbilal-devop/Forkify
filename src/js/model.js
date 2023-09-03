@@ -9,11 +9,13 @@ export const state = {
         currentPage: 1,
         totalPage: 1,
         paginationLimit: PAGINATION_LIMIT
-    }
+    },
+    bookMarks: []
 }
 
 
 export const fetchRecipe = async (id) => {
+    const { bookMarks } = state;
     const data = await getJson(`${API_URL}${id}`)
     let { recipe } = data?.data;
     recipe = {
@@ -24,7 +26,8 @@ export const fetchRecipe = async (id) => {
         image: recipe?.image_url,
         servings: recipe?.servings,
         cookingTime: recipe?.cooking_time,
-        ingredients: recipe?.ingredients
+        ingredients: recipe?.ingredients,
+        bookMarked: (bookMarks).includes(id)
     }
     state.recipe = recipe;
 }
@@ -81,3 +84,17 @@ export const updateServings = (updatedServings) => {
     recipe.servings = updatedServings;
 }
 
+
+// Add or reomove bookMark data from model
+export const addAndRemoveBookMark = (id) => {
+    const { bookMarks, recipe } = state;
+    recipe.bookMarked = !recipe.bookMarked;
+    if (recipe.bookMarked) {
+        bookMarks.push(id);
+        state['bookMarks'] = bookMarks;
+    } else {
+        newBookMarks = bookMarks.filter(each => each !== id);
+        state['bookMarks'] = newBookMarks;
+    }
+    state['recipe'] = recipe;
+}

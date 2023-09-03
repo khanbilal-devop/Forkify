@@ -36,7 +36,7 @@ const controlRecipe = async (id) => {
     //Hiding spinner
     RecipeView.hideSpinner();
     //Showing error 
-    RecipeView.showError()
+    RecipeView.showError(err.message)
   }
 }
 
@@ -84,8 +84,22 @@ const controlServing = (servings) => {
   RecipeView.render(state?.recipe);
 }
 
+
+const controlAddAndRemoveBookMark = (id) =>  {
+   const {recipe} = state
+
+   //Checking wheter to add or remove from bookmarks
+   if(recipe.bookMarked)
+    model.removeBookMark(id);
+   else
+   model.addBookMark(id);
+
+  // Update the view based on bookMark flag
+  RecipeView.update(state.recipe);
+}
+
 const init = () => {
-  RecipeView.addViewHandler(controlRecipe,controlServing);
+  RecipeView.addViewHandler(controlRecipe,controlServing,controlAddAndRemoveBookMark);
   SearchView.addViewHandler(controlSearchRecipe);
   PaginationView.addViewHandler(controlPagination)
 }
