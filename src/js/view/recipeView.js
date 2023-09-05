@@ -18,7 +18,7 @@ class RecipeView extends View {
 
 
   _generateMarkup() {
-    const { image, title, cookingTime, servings, ingredients, bookMarked ,id} = this._data
+    const { image, title, cookingTime, servings, ingredients, bookMarked ,id,publisher,sourceUrl,key} = this._data
     const markup = `
        <figure class="recipe__fig">
        <img src="${image}" alt="${title}" class="recipe__img" />
@@ -56,7 +56,7 @@ class RecipeView extends View {
          </div>
        </div>
     
-       <div class="recipe__user-generated">
+       <div class="recipe__user-generated ${ key ? '' : 'hidden'}">
          <svg>
            <use href="${icons}#icon-user"></use>
          </svg>
@@ -91,12 +91,12 @@ class RecipeView extends View {
        <h2 class="heading--2">How to cook it</h2>
        <p class="recipe__directions-text">
          This recipe was carefully designed and tested by
-         <span class="recipe__publisher">The Pioneer Woman</span>. Please check out
+         <span class="recipe__publisher">${publisher}</span>. Please check out
          directions at their website.
        </p>
        <a
          class="btn--small recipe__btn"
-         href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
+         href="${sourceUrl}"
          target="_blank"
        >
          <span>Directions</span>

@@ -17,7 +17,7 @@ export const state = {
 
 export const fetchRecipe = async (id) => {
     const { bookMarks } = state;
-    const data = await getJson(`${API_URL}${id}`)
+    const data = await getJson(`${API_URL}${id}?key=${KEY}`)
     state.recipe  =createRecipeObject(data);
 
     const bookMarked = ((bookMarks || []).map(each => each?.id)).includes(id);
@@ -25,9 +25,12 @@ export const fetchRecipe = async (id) => {
 }
 
 
+
 export const searchRecipe = async (query = "pizza") => {
     let { search } = state;
-    const data = await getJson(`${API_URL}?search=${query}&key=acf9a8df-9ca2-4d85-8754-bc5e62d6e052`)
+
+    //Based on the search key we will be able to identify wheter the recipe was posted by us or not
+    const data = await getJson(`${API_URL}?search=${query}&key=${KEY}`)
     let { recipes } = data?.data;
 
     // Splicing data for pagination
@@ -52,7 +55,8 @@ export const updateStateForSearch = (currentPage = 1) => {
             id: each?.id,
             imageUrl: each?.image_url,
             publisher: each?.publisher,
-            title: each?.title
+            title: each?.title,
+            ...(each.key && { key: each.key }),
 
         }
     ));

@@ -119,12 +119,18 @@ const controlAddRecipe = async (recipe) => {
 
     // Post recipe
     await model.uploadRecipe(recipe);
-
+    
     //Displaying success message
     AddRecipeView.showSuccess('Recipe successfully uploaded');
 
     // Render uploaded recipe;
     RecipeView.render(state.recipe);
+
+    //Update bookmarks
+    BookMarkView.render(state.bookMarks);
+
+    //Changing the hash
+    window.history.pushState(null,'',`#${state.recipe.id}`)
   } catch (err) {
     //Show error message
     AddRecipeView.showError(err?.message)

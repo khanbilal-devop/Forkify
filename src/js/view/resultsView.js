@@ -1,5 +1,6 @@
 
 import View from "./view";
+import icons from 'url:../../img/icons.svg';
 
 class ResultsView extends View {
 
@@ -28,6 +29,11 @@ class ResultsView extends View {
           <div class="preview__data">
             <h4 class="preview__title">${each?.title}</h4>
             <p class="preview__publisher">${each?.publisher}</p>
+            <div class="recipe__user-generated ${each?.key ? '' : 'hidden'}">
+            <svg>
+              <use href="${icons}#icon-user"></use>
+            </svg>
+          </div>
           </div>
         </a>
       </li>`}, '');
