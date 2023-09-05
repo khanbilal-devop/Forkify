@@ -17,3 +17,15 @@ export const getJson = async (url) => {
     if (!response.ok) throw new Error(`Status : ${response?.status} \n${data?.message}`)
     return data;
 }
+
+
+export const postJson = async (url,body) => {
+    const response = await Promise.race([fetch(url,{
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {  "Content-type": "application/json; charset=UTF-8"}
+    }), timeout(TIME_OUT_SECONDS)]);
+     const data = await response.json();
+     if (!response.ok) throw new Error(`Status : ${response?.status} \n${data?.message}`)
+     return data;
+ }

@@ -1,5 +1,5 @@
-import { API_URL, PAGINATION_LIMIT } from "./constant";
-import { getJson } from "./helper";
+import { API_URL, PAGINATION_LIMIT,KEY } from "./constant";
+import { getJson, postJson } from "./helper";
 
 export const state = {
     isReloaded : true,
@@ -18,19 +18,10 @@ export const state = {
 export const fetchRecipe = async (id) => {
     const { bookMarks } = state;
     const data = await getJson(`${API_URL}${id}`)
-    let { recipe } = data?.data;
-    recipe = {
-        id: recipe?.id,
-        title: recipe?.title,
-        publisher: recipe?.publisher,
-        sourceUrl: recipe?.source_url,
-        image: recipe?.image_url,
-        servings: recipe?.servings,
-        cookingTime: recipe?.cooking_time,
-        ingredients: recipe?.ingredients,
-        bookMarked: (bookMarks).includes(id)
-    }
-    state.recipe = recipe;
+    state.recipe  =createRecipeObject(data);
+
+    const bookMarked = ((bookMarks || []).map(each => each?.id)).includes(id);
+    state.recipe.bookMarked = bookMarked;
 }
 
 
@@ -85,6 +76,21 @@ export const updateServings = (updatedServings) => {
     recipe.servings = updatedServings;
 }
 
+const createRecipeObject = function (data) {
+    const { recipe } = data.data;
+    return {
+      id: recipe.id,
+      title: recipe.title,
+      publisher: recipe.publisher,
+      sourceUrl: recipe.source_url,
+      image: recipe.image_url,
+      servings: recipe.servings,
+      cookingTime: recipe.cooking_time,
+      ingredients: recipe.ingredients,
+      ...(recipe.key && { key: recipe.key }),
+    };
+  };
+
 
 // Add or reomove bookMark data from model
 export const addAndRemoveBookMark = (id) => {
@@ -101,6 +107,39 @@ export const addAndRemoveBookMark = (id) => {
     state['recipe'] = recipe;
 
 }
+
+export const uploadRecipe = async function (newRecipe) {
+    try {
+      const ingredients = Object.entries(newRecipe)
+        .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
+        .map(ing => {
+          const ingArr = ing[1].split(',').map(el => el.trim());
+          if (ingArr.length !== 3)
+            throw new Error( 'Wrong ingredient fromat! Please use the correct format :)');
+  
+          const [quantity, unit, description] = ingArr;
+  
+          return { quantity: quantity ? +quantity : null, unit, description };
+        });
+  
+      const recipe = {
+        title: newRecipe.title,
+        source_url: newRecipe.sourceUrl,
+        image_url: newRecipe.image,
+        publisher: newRecipe.publisher,
+        cooking_time: +newRecipe.cookingTime,
+        servings: +newRecipe.servings,
+        ingredients,
+      };
+  
+      const data = await postJson(`${API_URL}?key=${KEY}`, recipe);
+      state.recipe = createRecipeObject(data);
+      addAndRemoveBookMark();
+    } catch (err) {
+      throw err;
+    }
+  };
+  
 
 export const changeRelaoded = () => state.isReloaded = !state.isReloaded;
 

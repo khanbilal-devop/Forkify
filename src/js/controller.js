@@ -7,6 +7,7 @@ import ResultsView from './view/resultsView';
 import PaginationView from './view/paginationView';
 import BookMarkView from './view/bookMarkView';
 import AddRecipeView from './view/addRecipeView';
+import { MODAL_CLOSE_TIME_SEC } from './constant';
 
 // if(module.hot){
 //   module.hot.accept()
@@ -111,8 +112,28 @@ const controlAddAndRemoveBookMark = (id) => {
   BookMarkView.render(state.bookMarks);
 }
 
-const controlAddRecipe= (recipe) => {
-   console.log(recipe);
+const controlAddRecipe = async (recipe) => {
+  try {
+    //Render Spinner
+    AddRecipeView.renderSpinner();
+
+    // Post recipe
+    await model.uploadRecipe(recipe);
+
+    //Displaying success message
+    AddRecipeView.showSuccess('Recipe successfully uploaded');
+
+    // Render uploaded recipe;
+    RecipeView.render(state.recipe);
+  } catch (err) {
+    //Show error message
+    AddRecipeView.showError(err?.message)
+  } finally {
+    // Close Recipe add modal
+    setTimeout(() => AddRecipeView.toggleModal(), MODAL_CLOSE_TIME_SEC * 1000)
+  }
+
+
 }
 
 const init = () => {

@@ -8,6 +8,8 @@ class AddRecipeView extends View {
     _closeBtn = document.querySelector('.btn--close-modal');
     _openBtn = document.querySelector('.nav__btn--add-recipe');
     _form = document.querySelector('.upload');
+    _errorMessage = 'Something went wrong !!';
+    _parentElement = document.querySelector('.add-recipe-window');
 
     constructor() {
         super()
@@ -15,19 +17,19 @@ class AddRecipeView extends View {
         this._attachCloseHandler();
     }
 
-    _toggleModal() {
+    toggleModal() {
         this._overlay.classList.toggle('hidden');
         this._addModal.classList.toggle('hidden');
 
     }
 
     _attachOpenHandler() {
-        this._openBtn.addEventListener('click', this._toggleModal.bind(this));
+        this._openBtn.addEventListener('click', this.toggleModal.bind(this));
     }
 
     _attachCloseHandler() {
-        this._closeBtn.addEventListener('click', this._toggleModal.bind(this));
-        this._overlay.addEventListener('click', this._toggleModal.bind(this));
+        this._closeBtn.addEventListener('click', this.toggleModal.bind(this));
+        this._overlay.addEventListener('click', this.toggleModal.bind(this));
     }
 
     _formSubmit(formCallback){
